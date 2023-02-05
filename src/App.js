@@ -1,6 +1,9 @@
 import "./App.css";
 import React, { useState, useEffect, useCallback } from "react";
 import MovieList from "./Components/MovieList";
+import {Card,Button} from 'react-bootstrap';
+
+import AddMovie from "./Components/AddMovie";
 const App = () => {
   const [movie, setMovies] = useState([]);
   const [isLoading, setisLoading] = useState(0);
@@ -80,7 +83,10 @@ const App = () => {
 
   return (
     <React.Fragment>
+      <Card className="Maincomp"> 
       <section>
+        <AddMovie/>
+        <div className="buttondiv"> 
         <button
           onClick={() => {
             console.log("Button clicked");
@@ -89,6 +95,7 @@ const App = () => {
         >
           Fetch Movies
         </button>
+        </div>
       </section>
       <section>
         {content}
@@ -105,6 +112,7 @@ const App = () => {
           )}
         </div>
       </section>
+      </Card>
     </React.Fragment>
   );
 };
