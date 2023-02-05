@@ -17,7 +17,7 @@ const App = () => {
     setError(null);
 
     try {
-      const response = await fetch("https://swapi.dev/api/films/");
+      const response = await fetch("https://test-api-c7d27-default-rtdb.firebaseio.com/movies.json");
 
       if (!response.ok) {
         setCancil(true);
@@ -27,16 +27,19 @@ const App = () => {
       const data = await response.json();
       setRetry(!retry);
 
-      const transformedMovies = data.results.map((movieData) => {
-        return {
-          id: movieData.episode_id,
-          title: movieData.title,
-          openingText: movieData.opening_crawl,
-          releaseData: movieData.release_date,
-        };
-      });
+      const loadedMovies = [];
 
-      setMovies(transformedMovies);
+       for(const key in data){
+        loadedMovies.push({
+          id : key,
+          Title : data[key].Title,
+          Opening_text : data[key].Opening_text,
+          Release_Date : data[key].Release_Date,
+        });
+        
+       }
+
+      setMovies(loadedMovies);
     } catch (err) {
       setError(err.message);
     }
@@ -63,14 +66,28 @@ const App = () => {
 
 
 
- 
 
+
+  const deletefunction = async(deleteid) =>{
+    console.log("Deleted");
+    console.log(deleteid);
+
+    const url = `https://test-api-c7d27-default-rtdb.firebaseio.com/movies/${deleteid}.json`;
+    console.log(url);
+     const response = await fetch( url,{
+        method: "DELETE",
+       
+      });
+      const  data = await response.json();
+      console.log(data);
+      setRetry(!retry);
+    }
 
 
   let content = <p>Found no movies.</p>;
 
   if (movie.length > 0) {
-    content = <MovieList Movies={movie} />;
+    content = <MovieList Movies={movie} deletefun = {deletefunction} />;
   }
 
   if (error) {
@@ -85,7 +102,7 @@ const App = () => {
     <React.Fragment>
       <Card className="Maincomp"> 
       <section>
-        <AddMovie/>
+        <AddMovie retry ={retry} setRetry ={setRetry}/>
         <div className="buttondiv"> 
         <button
           onClick={() => {
